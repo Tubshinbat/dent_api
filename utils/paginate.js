@@ -3,9 +3,9 @@ module.exports = async function (page, limit, model, getTotal) {
   if (model) {
     total = await model.countDocuments();
   }
-  if (getTotal) {
-    total = getTotal;
-  }
+
+  total = getTotal;
+
   const pageCount = Math.ceil(total / limit);
   const start = (page - 1) * limit + 1;
   let end = start + limit - 1;

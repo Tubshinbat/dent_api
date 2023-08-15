@@ -9,6 +9,7 @@ const { slugify } = require("transliteration");
 const {
   userSearch,
   useNewsCategorySearch,
+  RegexOptions,
 } = require("../lib/searchOfterModel");
 
 exports.createNews = asyncHandler(async (req, res, next) => {
@@ -20,7 +21,7 @@ exports.createNews = asyncHandler(async (req, res, next) => {
   if (uniqueName.length > 0) {
     req.body.slug = slugify(req.body.name + "_" + uniqueName.length);
   } else {
-    req.body.slug = slugify(rq.body.name);
+    req.body.slug = slugify(req.body.name);
   }
 
   const news = await News.create(req.body);
@@ -33,7 +34,7 @@ exports.createNews = asyncHandler(async (req, res, next) => {
 
 exports.getNews = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 25;
+  const limit = parseInt(req.query.limit) || 21;
   let sort = req.query.sort || { createAt: -1 };
   const select = req.query.select;
 
@@ -49,10 +50,8 @@ exports.getNews = asyncHandler(async (req, res, next) => {
 
   if (valueRequired(category)) {
     const catIds = await useNewsCategorySearch(category);
-    console.log(catIds);
-    if (catIds.length > 0) {
-      query.where("categories").in(catIds);
-    }
+
+    query.where("categories").in(catIds);
   }
 
   if (valueRequired(categories)) {
@@ -125,6 +124,7 @@ exports.getNews = asyncHandler(async (req, res, next) => {
   const result = await clonedQuery.count();
 
   const pagination = await paginate(page, limit, News, result);
+
   query.limit(limit);
   query.skip(pagination.start - 1);
   const news = await query.exec();
