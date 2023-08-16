@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const WebInfoSchema = new mongoose.Schema({
+const WebinfoSchema = new mongoose.Schema({
   logo: {
     type: String,
   },
@@ -34,4 +34,4 @@ const WebInfoSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("WebInfo", WebInfoSchema);
+module.exports = mongoose.model("Webinfo", WebinfoSchema);
